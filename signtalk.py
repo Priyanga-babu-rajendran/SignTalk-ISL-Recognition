@@ -4,9 +4,19 @@ import streamlit as st
 from collections import deque, Counter
 from threading import Thread
 
-# ===============================================================
-# Fix YOLOv5 pathlib issue on Windows
-# ===============================================================
+import zipfile
+
+def extract_if_needed():
+    # Extract best.pt
+    if not os.path.exists("best.pt") and os.path.exists("best.zip"):
+        with zipfile.ZipFile("best.zip", 'r') as zip_ref:
+            zip_ref.extractall(".")
+    
+    # Extract svm model
+    if not os.path.exists("svm_mediapipe.pkl") and os.path.exists("svm_mediapipe.zip"):
+        with zipfile.ZipFile("svm_mediapipe.zip", 'r') as zip_ref:
+            zip_ref.extractall(".")
+            
 try:
     if os.name == 'nt':
         sys.modules["pathlib._local"] = pathlib
@@ -26,15 +36,16 @@ st.markdown("Live translation of sign language into grammatically correct senten
 # ===============================================================
 # Configuration
 # ===============================================================
-REPO_PATH = r"C:/Users/PRIYANGA/yolov5" # !<-- Check this path
-WEIGHTS_PATH = r"C:/Users/PRIYANGA/yolov5/runs/train/exp5/weights/best.pt" # !<-- Check this path
-SVM_MODEL_FILE = "svm_mediapipe.pkl" # This file must be in the same folder as app.py
+
+REPO_PATH = "."
+WEIGHTS_PATH = "best.pt"
+SVM_MODEL_FILE = "svm_mediapipe.pkl"
 
 USE_GRAMFORMER = True    # ✅ Enable grammar correction
 YOLO_CONF = 0.15
 BUFFER_LEN = 7
 REQUIRED_COUNT = 5
-PAUSE_SEC = 2.0  # <-- FIX: Increased pause time to 3 seconds
+PAUSE_SEC = 2.0  
 
 # ===============================================================
 # Load models (cached)
@@ -77,12 +88,13 @@ def load_all_models():
             
     return model, scaler, svm, device, gf
 
-# This tells the user why the app is taking time to start.
+extract_if_needed()
+
 with st.spinner("Loading AI models, please wait..."):
     model, scaler, svm, device, gf = load_all_models()
 
 # Stop the app if models failed to load
-if not model or not scaler or not svm:
+if model is None or scaler is None or svm is None:
     st.error("A critical model failed to load. The app cannot start.")
     st.stop()
 else:
@@ -124,7 +136,7 @@ def run_svm(landmarks):
     except Exception:
         return None, 0.0
     
-def expert_decision(y_label, y_conf, s_label, s_conf, yolo_thresh=0.2, svm_thresh=0.4): # <-- Lowered thresholds
+def expert_decision(y_label, y_conf, s_label, s_conf, yolo_thresh=0.2, svm_thresh=0.4): 
     """
     Expert logic: Combine YOLO and SVM.
     Only accept detections above a threshold.
@@ -156,7 +168,6 @@ def correct_sentence_in_background(sentence, gf_model, job_container):
     corrected_sentence = sentence # Default fallback
     
     try:
-        # --- FIX: Moved token mapping inside the try block ---
         token_map = {
             # Words
             "eye": "eye",
@@ -180,7 +191,7 @@ def correct_sentence_in_background(sentence, gf_model, job_container):
             "why": "why",
             "how": "how",
             
-            # --- NEW: Words that need verbs ---
+            # --- Words that need verbs ---
             "quiet": "I am quiet",
             "sleep": "I am sleeping",
             "hungry": "I am hungry",
@@ -194,12 +205,10 @@ def correct_sentence_in_background(sentence, gf_model, job_container):
         # This maps "i" to "I"
         tokens = ["I" if w.lower() == "i" else w for w in tokens]
         
-        # --- NEW HACK ---
         # If "I" is in the sentence, move it to the front to help Gramformer
         if "I" in tokens and tokens[0] != "I":
             tokens.remove("I")
             tokens.insert(0, "I")
-        # --- END HACK ---
 
         clean_sentence = " ".join(tokens).strip().capitalize()
         
@@ -232,11 +241,12 @@ def correct_sentence_in_background(sentence, gf_model, job_container):
 # ===============================================================
 # Real-time live stream
 # ===============================================================
+
 start = st.button("🎥 Start Live Translation")
 FRAME = st.empty()
 OUTPUT = st.empty()
 
-# --- NEW: Shared dictionary to communicate between threads ---
+# ---  Shared dictionary to communicate between threads ---
 correction_job = {"thread": None, "result": None, "sentence": None}
 
 if start:
@@ -255,7 +265,7 @@ if start:
 
     while cap.isOpened():
         
-        # --- NEW: Check for finished jobs at the START of the loop ---
+        # ---  Check for finished jobs at the START of the loop ---
         if correction_job["result"] is not None:
             # A thread has finished. Update the UI from the MAIN thread.
             print(f"MAIN LOOP: Detected result: '{correction_job['result']}'")
