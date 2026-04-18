@@ -108,6 +108,11 @@ else:
 try:
     import mediapipe as mp
 
+    # SAFE access
+    if not hasattr(mp, "solutions"):
+        st.error("❌ Mediapipe version incompatible (no 'solutions' module)")
+        st.stop()
+
     mp_hands = mp.solutions.hands
     mp_drawing = mp.solutions.drawing_utils
 
@@ -119,17 +124,8 @@ try:
     )
 
 except Exception as e:
-    st.error(f"Mediapipe failed to initialize: {e}")
+    st.error(f"❌ Mediapipe failed: {e}")
     st.stop()
-    
-# mp_hands = mp.solutions.hands if hasattr(mp, "solutions") else None
-# mp_drawing = mp.solutions.drawing_utils if hasattr(mp, "solutions") else None
-
-# if mp_hands is None:
-#     st.error("Mediapipe not properly installed")
-#     st.stop()
-# hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1,
-#                        min_detection_confidence=0.6, min_tracking_confidence=0.6)
 
 # ===============================================================
 # Helper functions
