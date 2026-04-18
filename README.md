@@ -51,6 +51,30 @@ The system is built as a **hybrid expert system** combining classical machine le
 
 ---
 
+## 🧪 Recommended Environment
+
+This project works best with:
+
+- Python 3.8 – 3.10  
+- GPU (optional, for faster YOLOv5 inference)
+
+Create a virtual environment:
+
+```bash
+py -3.8 -m venv signtalk_env
+signtalk_env\Scripts\activate
+```
+
+---
+
+## ⚠️ Important Notes
+
+- This project requires **Python 3.8–3.10**
+- Python 3.11+ may cause issues with MediaPipe
+- Webcam access is required for real-time detection
+
+---
+
 ## ⚙️ Installation
 
 ```bash
