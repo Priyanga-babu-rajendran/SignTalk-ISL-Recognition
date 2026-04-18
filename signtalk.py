@@ -105,14 +105,31 @@ else:
         st.success("✅ AI Models (YOLO, SVM) loaded. Gramformer disabled.")
 
 
-mp_hands = mp.solutions.hands if hasattr(mp, "solutions") else None
-mp_drawing = mp.solutions.drawing_utils if hasattr(mp, "solutions") else None
+try:
+    import mediapipe as mp
 
-if mp_hands is None:
-    st.error("Mediapipe not properly installed")
+    mp_hands = mp.solutions.hands
+    mp_drawing = mp.solutions.drawing_utils
+
+    hands = mp_hands.Hands(
+        static_image_mode=False,
+        max_num_hands=1,
+        min_detection_confidence=0.6,
+        min_tracking_confidence=0.6
+    )
+
+except Exception as e:
+    st.error(f"Mediapipe failed to initialize: {e}")
     st.stop()
-hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1,
-                       min_detection_confidence=0.6, min_tracking_confidence=0.6)
+    
+# mp_hands = mp.solutions.hands if hasattr(mp, "solutions") else None
+# mp_drawing = mp.solutions.drawing_utils if hasattr(mp, "solutions") else None
+
+# if mp_hands is None:
+#     st.error("Mediapipe not properly installed")
+#     st.stop()
+# hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1,
+#                        min_detection_confidence=0.6, min_tracking_confidence=0.6)
 
 # ===============================================================
 # Helper functions
