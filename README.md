@@ -1,5 +1,13 @@
+![Python](https://img.shields.io/badge/Python-3.9-blue)
+![Framework](https://img.shields.io/badge/Framework-Streamlit-red)
+![YOLOv5](https://img.shields.io/badge/Model-YOLOv5-green)
+![SVM](https://img.shields.io/badge/ML-SVM-orange)
+![MediaPipe](https://img.shields.io/badge/Tracking-MediaPipe-purple)
+![Gramformer](https://img.shields.io/badge/NLP-Gramformer-yellow)
+
 # SignTalk – Indian Sign Language Recognition System
 ### Real-time ISL recognition using YOLOv5, SVM, and NLP
+> 🚀 A real-time AI system that translates Indian Sign Language into grammatically correct sentences using hybrid ML + DL.
 
 ---
 
@@ -7,6 +15,15 @@
 Sign language is the primary mode of communication for millions of hearing-impaired individuals. However, real-time translation systems are limited, often requiring expensive hardware or human interpreters.
 
 This project aims to build an **accessible, real-time Indian Sign Language (ISL) recognition system** that can translate gestures into meaningful text and sentences.
+
+---
+
+## ✨ Features
+- Real-time sign language recognition using webcam  
+- Hybrid YOLOv5 + SVM prediction system  
+- Sentence formation using NLP (Gramformer)  
+- Automatic model loading from compressed files  
+- Interactive Streamlit interface
 
 ---
 
@@ -34,6 +51,32 @@ The system is built as a **hybrid expert system** combining classical machine le
 
 ---
 
+## ⚙️ Installation
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## ▶️ Run the App
+
+```bash
+streamlit run signtalk.py
+```
+
+---
+
+## 🧠 System Architecture
+The system integrates:
+- YOLOv5 → Detection  
+- MediaPipe → Landmark extraction  
+- SVM → Classification  
+- Expert System → Decision fusion  
+- Gramformer → Sentence generation
+
+---
+
 ## 📊 Dataset
 - 82 ISL word classes  
 - 809 original images  
@@ -50,13 +93,14 @@ The system is built as a **hybrid expert system** combining classical machine le
 
 ---
 
-## 🧠 System Architecture
-The system integrates:
-- YOLOv5 → Detection  
-- MediaPipe → Landmark extraction  
-- SVM → Classification  
-- Expert System → Decision fusion  
-- Gramformer → Sentence generation  
+## 🛠️ Tech Stack
+- Python  
+- PyTorch (YOLOv5)  
+- OpenCV  
+- MediaPipe  
+- Scikit-learn (SVM)  
+- Gramformer (NLP)  
+- Streamlit (UI)
 
 ---
 
@@ -68,14 +112,22 @@ The system integrates:
 
 ---
 
-## 🛠️ Tech Stack
-- Python  
-- PyTorch (YOLOv5)  
-- OpenCV  
-- MediaPipe  
-- Scikit-learn (SVM)  
-- Gramformer (NLP)  
-- Streamlit (UI)  
+## 📦 Model Files
+
+Due to GitHub file size limitations, model files are provided as ZIP archives:
+
+- `best.zip` → YOLOv5 trained model
+- `svm_mediapipe.zip` → SVM classifier
+
+These will be automatically extracted when the app runs.
+
+---
+
+## 📸 Demo
+
+![GUI](images/GUI.png)
+![System](images/Yolo+SVM.png)
+![Architecture](images/Yolo+SVM%20Expert%20System.jpeg)
 
 ---
 
@@ -83,3 +135,36 @@ The system integrates:
 - Expand dataset with more ISL vocabulary  
 - Improve real-time performance  
 - Deploy as web/mobile application
+
+---
+
+## ⚠️ Note
+
+- Model files are compressed due to GitHub size limits  
+- They will be automatically extracted during runtime  
+- Ensure your webcam is enabled for real-time detection
+
+---
+
+## 📜 License
+This project is licensed under the MIT License.
+
+This project is an enhanced version of an existing work. Proper credit has been given in the acknowledgements section.
+
+---
+
+## 🙏 Acknowledgement
+
+This project is based on and inspired by the research work:
+
+"Continuous word level sign language recognition using an expert system based on machine learning"
+by R. Sreemathy et al.
+
+This implementation extends the original work by:
+- Using YOLOv5 instead of YOLOv4
+- Real-time Streamlit deployment
+- Improved model integration and usability
+
+All credit for the core methodology goes to the original authors.
+
+---
