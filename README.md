@@ -91,6 +91,25 @@ streamlit run signtalk.py
 
 ---
 
+## 🛠️ Troubleshooting
+
+### MediaPipe Error
+If you see: AttributeError: module 'mediapipe' has no attribute 'solutions'
+
+Fix:
+```bash
+pip uninstall mediapipe -y
+pip install mediapipe==0.10.33
+```
+
+### Gramformer Not Installing
+
+Fix:
+```bash
+pip install git+https://github.com/PrithivirajDamodaran/Gramformer.git
+```
+
+
 ## 🧠 System Architecture
 The system integrates:
 - YOLOv5 → Detection  
