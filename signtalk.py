@@ -7,15 +7,19 @@ from threading import Thread
 import zipfile
 
 def extract_if_needed():
-    # Extract best.pt
-    if not os.path.exists("best.pt") and os.path.exists("best.zip"):
-        with zipfile.ZipFile("best.zip", 'r') as zip_ref:
-            zip_ref.extractall(".")
-    
-    # Extract svm model
-    if not os.path.exists("svm_mediapipe.pkl") and os.path.exists("svm_mediapipe.zip"):
-        with zipfile.ZipFile("svm_mediapipe.zip", 'r') as zip_ref:
-            zip_ref.extractall(".")
+    try:
+        if not os.path.exists("best.pt") and os.path.exists("best.zip"):
+            with zipfile.ZipFile("best.zip", 'r') as zip_ref:
+                zip_ref.extractall(".")
+            print("✅ Extracted best.pt")
+
+        if not os.path.exists("svm_mediapipe.pkl") and os.path.exists("svm_mediapipe.zip"):
+            with zipfile.ZipFile("svm_mediapipe.zip", 'r') as zip_ref:
+                zip_ref.extractall(".")
+            print("✅ Extracted svm model")
+
+    except Exception as e:
+        print("❌ Extraction failed:", e)
             
 try:
     if os.name == 'nt':
@@ -37,7 +41,7 @@ st.markdown("Live translation of sign language into grammatically correct senten
 # Configuration
 # ===============================================================
 
-REPO_PATH = "."
+REPO_PATH = "ultralytics/yolov5"
 WEIGHTS_PATH = "best.pt"
 SVM_MODEL_FILE = "svm_mediapipe.pkl"
 
@@ -56,9 +60,6 @@ def load_all_models():
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     
     # --- Check if files exist BEFORE loading ---
-    if not os.path.exists(REPO_PATH):
-        st.error(f"YOLO Repo Path NOT FOUND: {REPO_PATH}")
-        return None, None, None, None, None
     if not os.path.exists(WEIGHTS_PATH):
         st.error(f"YOLO Weights Path NOT FOUND: {WEIGHTS_PATH}")
         return None, None, None, None, None
@@ -68,8 +69,8 @@ def load_all_models():
     
     st.info(f"Loading models... (Device: {device})")
     
-    model = torch.hub.load(REPO_PATH, 'custom', path=WEIGHTS_PATH,
-                           source='local', force_reload=False)
+    model = torch.hub.load('ultralytics/yolov5', 'custom',
+                       path=WEIGHTS_PATH, force_reload=False)
     model.to(device).eval()
 
     bundle = joblib.load(SVM_MODEL_FILE)
