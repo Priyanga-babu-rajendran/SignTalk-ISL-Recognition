@@ -11,6 +11,19 @@
 
 ---
 
+
+## 👩‍💻 Contributors
+
+This project was collaboratively developed with equal contribution:
+
+- **Priyanga B**
+- **Keerthana S**
+
+Both contributors were equally involved in:
+- Model development (YOLOv5, SVM, NLP integration)
+- Dataset creation, annotation, and preprocessing
+- System design and implementation
+- Testing and evaluation
 ## 📌 Problem Statement
 Sign language is the primary mode of communication for millions of hearing-impaired individuals. However, real-time translation systems are limited, often requiring expensive hardware or human interpreters.
 
